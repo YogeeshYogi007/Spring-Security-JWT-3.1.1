@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Client;
 import com.example.demo.service.ClientService;
+import com.example.demo.service.CustomClientDetails;
 
 @RestController
 @RequestMapping(value = "/home")
@@ -51,4 +53,10 @@ public class ClientController {
 		return clientService.deletedClient(id);
 	}
 
+    @GetMapping("/me")
+    public String getUserRoles(Authentication authentication) {
+    	CustomClientDetails userPrincipal = (CustomClientDetails) authentication.getPrincipal();
+        // Access user roles: userPrincipal.getAuthorities()
+        return "User roles: " + userPrincipal.getAuthorities();
+    }
 }
