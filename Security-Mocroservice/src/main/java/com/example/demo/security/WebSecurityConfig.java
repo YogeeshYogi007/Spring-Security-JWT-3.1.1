@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,6 +19,7 @@ import com.example.demo.filter.JwtRequestFilter;
 import com.example.demo.service.ClientService;
 
 @Configuration
+@EnableMethodSecurity
 public class WebSecurityConfig {
 
     @Autowired
@@ -56,7 +58,8 @@ public class WebSecurityConfig {
         return http
             .csrf().disable()
             .authorizeRequests()
-                .requestMatchers("/authenticate", "/home/add").permitAll()
+                .requestMatchers("/authenticate", "/home/add","/swagger-ui/**","/v3/api-docs/**").permitAll()
+                .requestMatchers("/home/get/**","/home/update/**","/home/delete/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()
